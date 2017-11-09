@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>流程图</title>
+    <style>
+        .leftPanel {
+            width: 20%;
+            background: deepskyblue;
+            float: left;
+            min-height: 700px;
+            border: 1px solid #666666;
+            border-radius: 5px;
+        }
+
+        .rightPanel {
+            width: 75%;
+            float: left;
+        }
+
+        #container {
+            min-height: 700px;
+            position: relative;
+            border: 1px solid #666666;
+            background-color: #ffffff;
+            border-radius: 5px;
+            z-index: 0;
+            overflow: auto;
+        }
+
+        #container .model {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 0;
+            min-width: 150px;
+            min-height: 75px;
+        }
+
+        #container .model h4 {
+            background-color: #438eb9;
+            text-align: center;
+            background-image: none;
+            font-size: 16px;
+            color: #fff;
+            border: 1px solid #438eb9;
+            margin: 0px;
+            height: 35px;
+            vertical-align: middle;
+            padding: 0 3px;
+            line-height: 30px;
+        }
+
+        #container .model h4 a {
+            color: #fff !important;
+        }
+
+        #container .model ul {
+            border: 1px solid #62a8d1;
+            max-height: 320px;
+            overflow: auto;
+            margin: 0px;
+            width: 100%;
+            padding: 0px;
+        }
+
+        #container .model ul li {
+            border-bottom: 1px solid #62a8d1;
+            font-size: 15px;
+            list-style-type: none;
+        }
+
+        .jtk-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+            cursor: pointer;
+        }
+
+        #leftMenu li {
+            height: 40px;
+            width: 150px;
+            background-color: #438eb9;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            list-style-type: none;
+            vertical-align: middle;
+            line-height: 40px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .aLabel {
+            background-color: white;
+            padding: 0.4em;
+            font: 12px sans-serif;
+            color: #444;
+            z-index: 21;
+            border: 1px dotted gray;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+         .aLabel.jtk-hover {
+            background-color: #5C96BC;
+            color: white;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+<div id="demo" style="margin:20px;">
+    <div>
+        <div>
+            <!--左侧选择面板-->
+            <div class="leftPanel">
+                <div class="content_wrap" style="width: 100%;">
+                    <div class="left" style="width: 100%;">
+                        <ul id="leftMenu" style="overflow: auto;margin: 0px;padding:0px;"></ul>
+                    </div>
+                </div>
+            </div>
+            <!--右侧面板-->
+            <div class="rightPanel">
+                <div id="container"></div>
+            </div>
+        </div>
+        <button onclick="save();" style="width: 100px;height: 50px">保存到本地内存</button>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery-ui.min.js"></script>
+<script type="text/javascript" src="jsPlumb.min.js"></script>
+<script type="text/javascript" src="metadata.js"></script>
+<script type="text/javascript" src="demo.js"></script>
+<script type="text/javascript">
+    $(function () {
+        setLeftMenu(metadata);
+        /**
+         * 设置左边菜单
+         * @param Data
+         */
+        function setLeftMenu(list)
+        {
+            for(var obj in list){
+                    var element_str = '<li id="' + list[obj].id + '">' + list[obj].name + '</li>';
+                    $("#leftMenu").append(element_str);
+            }
+            //拖拽设置
+            $("#leftMenu li").draggable({
+                helper: "clone",
+                scope: "plant"
+            });
+            $("#container").droppable({
+                scope: "plant",
+                drop: function(event, ui){
+                    CreateModel(ui, $(this));
+                }
+            });
+        }
+        loaddate();
+    });
+</script>
